@@ -1,0 +1,23 @@
+{
+  "name": "sails-util",
+  "version": "0.0.0",
+  "description": "Shared utilities between sails, waterline, rigging, mast, parley, etc.",
+  "main": "util.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mikermcneil/sails-utils.git"
+  },
+  "keywords": [
+    "sails",
+    "waterline",
+    "rigging",
+    "util",
+    "underscore"
+  ],
+  "author": "Mike McNeil",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
