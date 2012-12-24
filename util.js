@@ -62,13 +62,11 @@ exports.parseJSONish = function(someString) {
 /**
  * Return a 2nary version of the function, with null as its first argument
  */
-exports.cbok = function cbok(cb) {
+exports.unprefix = function cbok(cb) {
 	return function(model) {
 		cb(null, model);
 	};
 };
-
-_.unprefix = exports.cbok;
 
 /**
  * Return the specified function without the first argument, but apply it in a closure
@@ -83,9 +81,9 @@ exports.preface = function preface(fn, action, context) {
 	};
 };
 
-// Mix in some commonly used underscore fns
-_.mixin({
+	// Mix in some commonly used underscore fns
 
+_.extend(exports,{
 	// Really LOUD version of console.log.debug
 	shout: function() {
 		var args = _.values(arguments);
@@ -182,91 +180,3 @@ _.mixin({
 		});
 	}
 });
-
-
-// Recursive underscore methods
-_.recursive = {
-
-	// fn(value,keyChain)
-	all: function(collection, fn, maxDepth) {
-		if(!_.isObject(collection)) {
-			return true;
-		}
-
-		// Default value for maxDepth
-		maxDepth = maxDepth || 50;
-
-		// Kick off recursive function
-		return _all(collection, null, [], fn, 0);
-
-		function _all(item, key, keyChain, fn, depth) {
-			var lengthenedKeyChain = [];
-
-			if(depth > maxDepth) {
-				throw new Error('Depth of object being parsed exceeds maxDepth ().  Maybe it links to itself?');
-			}
-
-			// If the key is null, this is the root item, so skip this step
-			// Descend
-			if(key !== null && keyChain) {
-				lengthenedKeyChain = keyChain.slice(0);
-				lengthenedKeyChain.push(key);
-			}
-
-			// If the current item is a collection
-			if(_.isObject(item)) {
-				return _.all(item, function(subval, subkey) {
-					return _all(subval, subkey, lengthenedKeyChain, fn, depth + 1);
-				});
-			}
-			// Leaf items land here and execute the iterator
-			else {
-				return fn(item, lengthenedKeyChain);
-			}
-		}
-	},
-
-	// fn(original,newOne,anotherNewOne,...)
-	extend: function(original, newObj) {
-
-		// return _.extend(original,newObj);
-		// TODO: make this work for more than one newObj
-		// var newObjects = _.toArray(arguments).shift();
-
-		return _.extend(original, _.objMap(newObj, function(newVal, key) {
-			var oldVal = original[key];
-
-			// If the new value is a non-object or array or function,
-			// or the old value is a non-object or array, use it
-			if ((_.isObject(newVal) && _.isFunction(newVal)) || _.isArray(newVal) || !_.isObject(newVal) || _.isArray(oldVal) || !_.isObject(oldVal)) {
-				return !_.isUndefined(newVal) ? newVal : oldVal;
-			}
-			// Otherwise, we have to descend recursively
-			else {
-				return _.recursive.extend(oldVal, newVal);
-			}
-		}));
-	},
-
-	// fn(original,newOne,anotherNewOne,...)
-	defaults: function(original, newObj) {
-		// TODO: make this work for more than one newObj
-		// var newObjects = _.toArray(arguments).shift();
-
-		// return _.defaults(original,newObj);
-
-		return _.defaults(original, _.objMap(newObj, function(newVal, key) {
-			var oldVal = original[key];
-
-			// If the new value is a non-object or array, 
-			// or the old value is a non-object or array, use it
-			if((_.isObject(newVal) && _.isFunction(newVal)) || _.isArray(newVal) || !_.isObject(newVal) || _.isArray(oldVal) || !_.isObject(oldVal)) {
-				return !oldVal ? newVal : oldVal;
-			}
-			// Otherwise, we have to descend recursively
-			else {
-				return _.recursive.defaults(oldVal, newVal);
-			}
-		}));
-	}
-};
