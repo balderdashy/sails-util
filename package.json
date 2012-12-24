@@ -19,5 +19,9 @@
   ],
   "author": "Mike McNeil",
   "license": "MIT",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "underscore": "~1.4.3",
+    "underscore.string": "~2.3.1"
+  }
 }
