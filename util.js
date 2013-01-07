@@ -81,8 +81,7 @@ exports.preface = function preface(fn, action, context) {
 	};
 };
 
-	// Mix in some commonly used underscore fns
-
+// Mix in some commonly used underscore fns
 _.extend(exports,{
 	// Really LOUD version of console.log.debug
 	shout: function() {
@@ -175,7 +174,7 @@ _.extend(exports,{
 	 */
 	objInvoke: function(obj) {
 		var args = _.toArray(arguments).shift();
-		return _.objMap(obj, function(fn) {
+		return exports.objMap(obj, function(fn) {
 			return fn(args);
 		});
 	}
