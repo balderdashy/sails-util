@@ -7,11 +7,17 @@ _.str = require('underscore.string');
 exports.parsePath = function(path) {
 	// Split url and determine controller/action
 	var pieces = path.split('/');
-	return {
+	var parsedPath = {
 		entity: pieces.length > 1 && pieces[1],
-		action: pieces.length > 2 && pieces[2],
-		id: pieces.length > 3 && pieces[3]
+		action: pieces.length > 2 && pieces[2]
 	};
+	
+	// Only include id property if one was provided
+	if (pieces.length > 3) {
+		parsedPath.id = pieces[3]
+	}
+	
+	return parsedPath;
 };
 
 /**
