@@ -1,27 +1,22 @@
 {
   "name": "sails-util",
-  "version": "0.1.0",
-  "description": "Shared utilities between sails, waterline, rigging, mast, parley, etc.",
+  "version": "0.10.0",
+  "description": "Shared utilities between sails, waterline, etc.",
   "main": "util.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mikermcneil/sails-utils.git"
+    "url": "git://github.com/balderdashy/sails-utils.git"
   },
   "keywords": [
     "sails",
     "waterline",
-    "rigging",
-    "util",
-    "underscore"
+    "util"
   ],
   "author": "Mike McNeil",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "dependencies": {
-    "underscore": "1.4.3",
-    "underscore.string": "2.3.1"
-  }
+  "dependencies": {}
 }

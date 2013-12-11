@@ -1,4 +1,4 @@
-sails-utils
+sails-util
 ===========
 
-Shared utilities between sails, waterline, rigging, mast, parley, etc.
+Shared utilities between sails, waterline, etc.
