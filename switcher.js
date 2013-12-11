@@ -32,17 +32,18 @@ module.exports = function switcher( callback, defaultErrorHandler, callbackConte
 		if (err) {
 			return Handler.error.apply(callbackContext || this, args);
 		}
-		return Handler.ok.apply(callbackContext || this, args.slice(1));
+		return Handler.success.apply(callbackContext || this, args.slice(1));
 	};
 
 
 
 	// If callback is provided as a function, transform it into an object
-	// w/ multiple copies of the callback.
+	// w/ multiple copies of the callback-- one to handle an error, and one
+	// to handle a success.
 	if ( _.isFunction(callback) ) {
 		var _originalCallbackFn = callback;
 		callback = {
-			ok: function () {
+			success: function () {
 				// shift arguments over to make sure the first arg won't be perceived as an `err`
 				var args = Array.prototype.slice.call(arguments);
 				args.unshift(null);
@@ -80,8 +81,8 @@ module.exports = function switcher( callback, defaultErrorHandler, callbackConte
 		};
 	};
 	_.defaults(Handler, {
+		success: unknownCaseHandler('success', '`success` case triggered, but no handler was implemented.'),
 		error: unknownCaseHandler('error', '`error` case triggered, but no handler was implemented.'),
-		ok: unknownCaseHandler('ok', '`ok` case triggered, but no handler was implemented.'),
 		invalid: unknownCaseHandler('invalid', '`invalid` case triggered, but no handler was implemented.')
 	});
 
