@@ -1,8 +1,8 @@
 {
   "name": "sails-util",
-  "version": "0.10.0",
+  "version": "0.0.0",
   "description": "Shared utilities between sails, waterline, etc.",
-  "main": "util.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
