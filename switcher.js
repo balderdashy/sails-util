@@ -82,6 +82,8 @@ module.exports = function switcher( callback, defaultHandlers, callbackContext )
 			// 	return defaultHandlers(err);
 			// }
 			// 
+
+			// NEW WAY:
 			if ( _.isObject(defaultHandlers) && _.isFunction(defaultHandlers['*']) ) {
 				return defaultHandlers['*'](err);
 			}
@@ -100,16 +102,28 @@ module.exports = function switcher( callback, defaultHandlers, callbackContext )
 				var runtimeArgs = Array.prototype.slice.call(arguments);
 				var runtimeCtx = callbackContext || this;
 
+				// Track previous handler to make usage error messages more useful.
+				var prevHandler;
+
 				// No more than 5 "redirects" allowed (prevents never-ending loop)
 				var MAX_FORWARDS = 5;
 				var numIterations = 0;
 				do {
-					runtimeHandler = defaultHandlers[runtimeHandler];
+					prevHandler = runtimeHandler;
+					runtimeHandler = Handler[runtimeHandler];
+					// console.log('redirecting '+name+' to "'+prevHandler +'"-- got ' + runtimeHandler);
 					numIterations++;
 				}
-				while ( !_.isFunction(runtimeHandler) || numIterations < MAX_FORWARDS);
+				while ( _.isString(runtimeHandler) && numIterations <= MAX_FORWARDS);
 				
-				if (numIterations < MAX_FORWARDS) throw new Error('A handler object seems to be pointing to itself in a never-ending loop...');
+				if (numIterations > MAX_FORWARDS) {
+					throw new Error('Default handlers object ('+util.inspect(defaultHandlers)+') has a cyclic redirect.');
+				}
+
+				// Redirects to unknown handler
+				if (!_.isFunction(runtimeHandler)) {
+					runtimeHandler = unknownCaseHandler(runtimeHandler, '`' + name + '` case triggered, but no handler was implemented.');
+				}
 
 				// Invoke final runtime function
 				runtimeHandler.apply(runtimeCtx, runtimeArgs);
