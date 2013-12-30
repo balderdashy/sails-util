@@ -15,13 +15,15 @@ var util = require('util');
  *
  * @param {Object|Function} callback
  *			- a handler object or a standard 1|2-ary node callback.
- * @param {Object} [defaultErrorHandler]
- *			- callback for when none of the other handlers match
+ * @param {Object} [defaultHandlers]
+ *			- '*': supply a special callback for when none of the other handlers match
+ *			- a string can be supplied, e.g. {'invalid': 'error'}, to "forward" a handler to another
+ *			- otherwise a function should be supplied
  * @param {Object} [callbackContext]
  *			- optional `this` context for callbacks
  */
 
-module.exports = function switcher( callback, defaultErrorHandler, callbackContext ) {
+module.exports = function switcher( callback, defaultHandlers, callbackContext ) {
 
 
 	// Default handler + statuses-- can be called as a function.
@@ -74,13 +76,48 @@ module.exports = function switcher( callback, defaultErrorHandler, callbackConte
 			var args = Array.prototype.slice.call(arguments);
 			err = (args[0] ? util.inspect(args[0])+'        ' : '') + (err ? '('+(err||'')+')' : '');
 
-			if ( _.isFunction(defaultErrorHandler) ) {
-				return defaultErrorHandler(err);
+			// OLD WAY:
+			// 
+			// if ( _.isFunction(defaultHandlers) ) {
+			// 	return defaultHandlers(err);
+			// }
+			// 
+			if ( _.isObject(defaultHandlers) && _.isFunction(defaultHandlers['*']) ) {
+				return defaultHandlers['*'](err);
 			}
 			else throw new Error(err);
 		};
 	};
-	_.defaults(Handler, {
+
+	// redirect any handler defaults specified as strings
+	if (_.isObject(defaultHandlers)) {
+		defaultHandlers = _.mapValues(defaultHandlers, function (handler, name) {
+			if (_.isFunction(handler)) return handler;
+
+			// Closure which will resolve redirected handler
+			return function () {
+				var runtimeHandler = handler;
+				var runtimeArgs = Array.prototype.slice.call(arguments);
+				var runtimeCtx = callbackContext || this;
+
+				// No more than 5 "redirects" allowed (prevents never-ending loop)
+				var MAX_FORWARDS = 5;
+				var numIterations = 0;
+				do {
+					runtimeHandler = defaultHandlers[runtimeHandler];
+					numIterations++;
+				}
+				while ( !_.isFunction(runtimeHandler) || numIterations < MAX_FORWARDS);
+				
+				if (numIterations < MAX_FORWARDS) throw new Error('A handler object seems to be pointing to itself in a never-ending loop...');
+
+				// Invoke final runtime function
+				runtimeHandler.apply(runtimeCtx, runtimeArgs);
+			};
+		});
+	}
+
+	_.defaults(Handler, defaultHandlers, {
 		success: unknownCaseHandler('success', '`success` case triggered, but no handler was implemented.'),
 		error: unknownCaseHandler('error', '`error` case triggered, but no handler was implemented.'),
 		invalid: unknownCaseHandler('invalid', '`invalid` case triggered, but no handler was implemented.')
