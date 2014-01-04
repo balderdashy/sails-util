@@ -236,11 +236,14 @@ exports.isDictionary = function isDictionary(thing) {
  */
 
 exports.optional = function wrapOptionalCallback (cb) {
-	return function optionalCallback () {
-		if (!cb) return;
-		var args = Array.prototype.slice.call(arguments);
-		return cb.apply(this, args);
-	};
+	if ( _.isFunction(cb) ) return cb;
+	return function _noOp (){};
+
+	// return function optionalCallback () {
+	// 	if (!cb) return;
+	// 	var args = Array.prototype.slice.call(arguments);
+	// 	return cb.apply(this, args);
+	// };
 };
 
 
