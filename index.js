@@ -22,9 +22,9 @@ _.extend(exports, nodeutil);
 
 
 /**
- * Accept things like `FooController` or `FoO`, then transform 
+ * Accept things like `FooController` or `FoO`, then transform
  * and lower-case them to things like `foo`
- * 
+ *
  * @api private
  */
 
@@ -42,11 +42,11 @@ exports.normalizeControllerId = function normalizeControllerId (controllerId) {
 
 
 /**
- * Accept things like `FooAdapter` or `FoO`, then transform 
+ * Accept things like `FooAdapter` or `FoO`, then transform
  * and lower-case them to things like `foo`
  *
  * Works for adapters, controllers, and services
- * 
+ *
  * @api private
  */
 
@@ -63,7 +63,7 @@ exports.normalizeId = function normalizeId (id) {
 
 
 
-/** 
+/**
  * isValidECMA51Variable
  *
  * @param {String} v
@@ -100,7 +100,7 @@ exports.defaultsDeep = _.partialRight(_.merge, _.defaults);
  *
  * @param {String|Object|Error|Array} errOrErrs
  * @returns {Array[Error]}
- * 
+ *
  * @api private
  */
 
@@ -117,7 +117,7 @@ exports.normalizeErrors = function normalizeErrors(errOrErrs) {
 		if (e instanceof Error) {
 			displayError = e;
 		}
-		
+
 		// Create an error ad hoc
 		// (but save reference to original)
 		else {
@@ -137,7 +137,7 @@ exports.normalizeErrors = function normalizeErrors(errOrErrs) {
 /**
  * Detect HTTP verb in an expression like:
  * `get baz`    or     `get /foo/baz`
- * 
+ *
  * @api private
  */
 
@@ -145,7 +145,7 @@ exports.detectVerb = function (haystack) {
 	var verbExpr = /^(get|post|put|delete|trace|options|connect|patch|head)\s+/i;
 	var verbSpecified = _.last(haystack.match(verbExpr) || []) || '';
 	verbSpecified = verbSpecified.toLowerCase();
-	
+
 	// If a verb was specified, eliminate the verb from the original string
 	if (verbSpecified) {
 		haystack = haystack.replace(verbExpr,'');
@@ -170,7 +170,7 @@ exports.detectVerb = function (haystack) {
  * Run a method meant for a single object on a single instance OR array.
  * For a list, run the method on each item return the resulting array.
  * For anything else, return it silently.
- * 
+ *
  * @api private
  */
 
@@ -188,7 +188,7 @@ exports.pluralize = function pluralize(collection, application) {
 
 /**
  * Detect if a string is "safe" to eval()
- * 
+ *
  * @api private
  */
 
@@ -209,11 +209,11 @@ exports.safeToEval = function(someString) {
 /**
  * Return whether the specified item is an object, but NOT an array or function
  *
- * TODO:	replace usages of this method with `instanceof` 
+ * TODO:	replace usages of this method with `instanceof`
  *			and `_.isPlainObject()`
  *
  * @api private
- * 
+ *
  * @api private
  */
 exports.isDictionary = function isDictionary(thing) {
@@ -229,9 +229,9 @@ exports.isDictionary = function isDictionary(thing) {
 
 /**
  * optional
- * 
+ *
  * Wrap a callback function to make it optional
- * 
+ *
  * @api private
  */
 
@@ -257,7 +257,7 @@ exports.optional = function wrapOptionalCallback (cb) {
  */
 
 exports.isSameOrigin = function isSameOrigin(req) {
-	
+
 	// Get the domain out of the origin header
 	var matches = req.headers.origin.match(/^https?:\/\/([^:]+)(:\d+)?$/);
 	if (matches === null) {
@@ -273,7 +273,7 @@ exports.isSameOrigin = function isSameOrigin(req) {
 
 /**
  * Return whether the given object is an instance of Error
- * 
+ *
  * @api private
  */
 
@@ -287,7 +287,7 @@ exports.isError = function (e) {
 
 /**
  * Extract the file extension suffix from a filename or path
- * 
+ *
  * @api private
  */
 
@@ -302,10 +302,10 @@ exports.fileExtension = function(str) {
 
 /**
  * Return the abbreviated ordinal string for a given integer
- * 
+ *
  * http://en.wikipedia.org/wiki/Ordinal_number_(linguistics)
  * i.e. prettier rendering of things like: 1st, 2nd, 3rd, 4th
- * 
+ *
  * @api private
  */
 
@@ -344,9 +344,9 @@ exports.ordinal = function(integer) {
  *
  * @param {Function} func
  * @returns array of argument names, e.g. ['req', 'res']
- * 
+ *
  * @api private
- */ 
+ */
 exports.getParamNames = function(func) {
 
 	var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -362,10 +362,10 @@ exports.getParamNames = function(func) {
 
 /**
  * parseJSONFile
- * 
+ *
  * Read a json file at the specified path.
  * If an error occurs, call cb(err), and dont throw!
- * 
+ *
  * @api private
  */
 
@@ -413,7 +413,7 @@ exports.parseJSONFile = function ( path, cb ) {
  *
  * Synchronous version of getJSONFile()
  * Returns false if json file cannot be read or parsed.
- * 
+ *
  * @api private
  */
 
@@ -426,10 +426,10 @@ exports.parseJSONFileSync = function ( path ) {
 
 /**
  * getPackage
- * 
+ *
  * Read package.json file in the directory at the specified
  * path.  If an error occurs, call cb(err), and dont throw!
- * 
+ *
  * @api private
  */
 
@@ -458,7 +458,7 @@ exports.getPackage = function (path, cb) {
  *
  * Synchronous version of getPackage()
  * Returns false if package.json cannot be read or parsed.
- * 
+ *
  * @api private
  */
 
@@ -498,9 +498,9 @@ exports.homeDirectory = function () {
 /**
  * tolerantParse
  *
- * Parse specified JSON, but if it fails, 
+ * Parse specified JSON, but if it fails,
  * return false instead of throwing.
- * 
+ *
  * @api private
  */
 
@@ -525,7 +525,7 @@ exports.tolerantParse = function ( json ) {
  *
  * If stringification doesn't work, instead of throwing,
  * return false.
- * 
+ *
  * @api private
  */
 exports.stringify = function ( json, serializer, indent, decycler ) {
@@ -553,9 +553,9 @@ _.extend(exports,{
 	 * _.objMap
 	 *
 	 * _.map for objects, keeps key/value associations
-	 * 
+	 *
 	 * @api private
-	 */ 
+	 */
 
 	objMap: function(input, mapper, context) {
 		return _.reduce(input, function(obj, v, k) {
@@ -572,7 +572,7 @@ _.extend(exports,{
 	 *
 	 * _.filter for objects, keeps key/value associations
 	 * but only includes the properties that pass test().
-	 * 
+	 *
 	 * @api private
 	 */
 
@@ -588,12 +588,12 @@ _.extend(exports,{
 
 
 
-	/** 
+	/**
 	 * _.objReject
 	 *
 	 * _.reject for objects, keeps key/value associations
 	 * but does not include the properties that pass test().
-	 * 
+	 *
 	 * @api private
 	 */
 
@@ -610,11 +610,11 @@ _.extend(exports,{
 
 	/**
 	 * _.objInvoke
-	 * 
+	 *
 	 * Usage:
 	 *	obj -> the object
 	 *	arguments* -> other arguments can be specified to be invoked on each of the functions
-	 * 
+	 *
 	 * @api private
 	 */
 
@@ -623,8 +623,31 @@ _.extend(exports,{
 		return exports.objMap(obj, function(fn) {
 			return fn(args);
 		});
+	},
+
+	/**
+	 * _.objCompact
+	 *
+	 * _.compact for objects; keeps only keys whose values are not undefined
+	 *	obj -> the object
+	 *	strict -> if "true", only keep keys whose values are falsy
+	 *
+	 * @api private
+	 */
+	objCompact: function(obj, strict) {
+		obj = _.reduce(obj, function(memo, value, paramName) {
+			if (strict) {
+				if (value !== undefined && value !== null && value !== false && value !== '') {
+					memo[paramName] = value;
+				}
+			} else if (value !== undefined) {
+        		memo[paramName] = value;
+      		}
+      		return memo;
+    	}, {});
+    	return obj;
 	}
-	
+
 });
 
 
