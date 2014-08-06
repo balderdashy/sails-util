@@ -142,7 +142,7 @@ exports.normalizeErrors = function normalizeErrors(errOrErrs) {
  */
 
 exports.detectVerb = function (haystack) {
-	var verbExpr = /^(get|post|put|delete|trace|options|connect|patch|head)\s+/i;
+	var verbExpr = /^(all|get|post|put|delete|trace|options|connect|patch|head)\s+/i;
 	var verbSpecified = _.last(haystack.match(verbExpr) || []) || '';
 	verbSpecified = verbSpecified.toLowerCase();
 
