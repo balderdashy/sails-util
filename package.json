@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/balderdashy/sails-utils.git"
+    "url": "git://github.com/balderdashy/sails-util.git"
   },
   "keywords": [
     "sails",
