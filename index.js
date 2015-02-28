@@ -656,11 +656,20 @@ _.extend(exports,{
       		return memo;
     	}, {});
     	return obj;
+	},
+
+	/**
+	 * _.objDeref
+	 *
+	 * Safely dereference an object given a path
+	 * @param  {object} obj  The object to dereference
+	 * @param  {string} path The dot-delimited path to use
+	 * @return {mixed}      The value of the object at that path, or undefined
+	 */
+	objDeref: function(obj, path) {
+		return path.split('.').reduce(_objDeref, obj);
 	}
 
 });
 
-
-
-
-
+function _objDeref(obj,i) {return (typeof obj == 'object' && obj !== null) ? obj[i] : undefined;}
