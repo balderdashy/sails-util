@@ -1,6 +1,6 @@
 {
   "name": "sails-util",
-  "version": "0.10.6",
+  "version": "0.11.0",
   "description": "Shared utilities between sails, waterline, etc.",
   "main": "index.js",
   "scripts": {
