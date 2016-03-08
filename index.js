@@ -141,21 +141,22 @@ exports.normalizeErrors = function normalizeErrors(errOrErrs) {
  * @api private
  */
 
-exports.detectVerb = function (haystack) {
-	var verbExpr = /^(all|get|post|put|delete|trace|options|connect|patch|head)\s+/i;
-	var verbSpecified = _.last(haystack.match(verbExpr) || []) || '';
-	verbSpecified = verbSpecified.toLowerCase();
+exports.detectVerb = function detectVerb(haystack) {
+  var routeParts = haystack.split(' ');
+  var routeData  = {
+    verb    : '',
+    original: haystack,
+    path    : haystack
+  };
 
-	// If a verb was specified, eliminate the verb from the original string
-	if (verbSpecified) {
-		haystack = haystack.replace(verbExpr,'');
-	}
+  if (routeParts.length === 1) {
+    return routeData;
+  }
 
-	return {
-		verb: verbSpecified,
-		original: haystack,
-		path: haystack
-	};
+  routeData.verb = routeParts.shift();
+  routeData.path = routeParts.join(' ');
+
+  return routeData;
 };
 
 
